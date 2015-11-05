@@ -1,3 +1,4 @@
+//comments
 class jobtype {
     int JobNo;
     int Size;
