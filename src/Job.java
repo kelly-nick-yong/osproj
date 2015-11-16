@@ -4,10 +4,17 @@ public class Job {
 	private int priority;
 	private int size;
 	private int maxCPUtime;
-	private int currentTime;
+	private int enterTime;
+	private int address;
+	private boolean inMemory;
 	
 	public Job(){
-		
+		jobNum = -1;
+		priority = -1;
+		size = 0;
+		maxCPUtime = -1;
+		address = -1;
+		inMemory = false;
 	}
 	
 	public Job(int jobNum, int priority ,int size,int maxCPUtime, int currentTime){
@@ -15,7 +22,8 @@ public class Job {
 		this.priority = priority;
 		this.size = size;
 		this.maxCPUtime = maxCPUtime;
-		this.currentTime = currentTime;
+		this.enterTime = currentTime;
+		inMemory = false;
 	}
 	
 	public int getJobNum() {
@@ -42,10 +50,18 @@ public class Job {
 	public void setMaxCPUtime(int maxCPUtime) {
 		this.maxCPUtime = maxCPUtime;
 	}
-	public int getCurrentTime() {
-		return currentTime;
+	public int getEnterTime() {
+		return enterTime;
 	}
-	public void setCurrentTime(int currentTime) {
-		this.currentTime = currentTime;
+	public void setEnterTime(int enterTime) {
+		this.enterTime = enterTime;
+	}
+
+	public int getAddress() {
+		return address;
+	}
+
+	public void setAddress(int address) {
+		this.address = address;
 	}
 }
