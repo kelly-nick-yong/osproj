@@ -1,12 +1,13 @@
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MemoryManager {
 	private final int MAX = 100;
-	private LinkedList<Integer> memoryTable;
+	private List<Integer> memoryTable;
 	private boolean haveSpace;
 	
 	public MemoryManager(){
-		memoryTable = new LinkedList<Integer>();
+		memoryTable = new ArrayList<Integer>();
 		for(int i= 0; i< MAX; i++){
 			memoryTable.add(0);
 		}
@@ -24,37 +25,40 @@ public class MemoryManager {
 				memoryTable.set(i, 1);
 			}
 		}
+		for(int i = 0; i< memoryTable.size(); i++)
+			System.out.print(memoryTable.get(i));
 	}
 	
+	//best fit
 	public int [] findSpace(Job job){
 		System.out.println("Finding Space!!");
 		int beg = -1, end = -1;
 		int tmpBeg =0, tmpEnd=0;
 		int sizeNeeded = job.getSize();
 		int bestFitLen = MAX;
-		boolean isFirst = true, first1= true;
+		boolean first0 = true;
 		int tempLen = 0;
 		
 		for(int i=0; i < MAX; i++){
 			if(memoryTable.get(i) == 0){
-				if(isFirst){
+				if(first0){
 					tmpBeg = i;
-					isFirst = false;
+					first0 = false;
 				}
+				tempLen++;
 				if(tempLen == sizeNeeded)
 					tmpEnd = i;
-				tempLen++;
 			}
-			else if(memoryTable.get(i) == 1 && first1){
-				isFirst = true;
-				first1 = false;
-				
-				if(tempLen >= sizeNeeded && tempLen < bestFitLen){
+			if(memoryTable.get(i) == 1 || i == 99){
+				first0 = true;
+				if(tempLen >= sizeNeeded && tempLen <= bestFitLen){
 					bestFitLen = tempLen;
 					beg = tmpBeg;
 					end = tmpEnd;
+					tempLen = 0;
 				}
 			}
+			
 		}
 		if(end == -1)
 			setHaveSpace(false);
