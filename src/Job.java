@@ -7,14 +7,20 @@ public class Job {
 	private int enterTime;
 	private int address;
 	private boolean inMemory;
-	
+	private boolean blocked;
+	private boolean swapping;
+	private boolean terminated;
+
 	public Job(){
-		jobNum = -1;
+		jobNum = 0;
 		priority = -1;
 		size = 0;
-		maxCPUtime = -1;
+		maxCPUtime = 0;
 		address = -1;
-		inMemory = false;
+		setInMemory(false);
+		setBlocked(false);
+		setSwapping(false);
+		setTerminated(false);
 	}
 	
 	public Job(int jobNum, int priority ,int size,int maxCPUtime, int currentTime){
@@ -23,9 +29,13 @@ public class Job {
 		this.size = size;
 		this.maxCPUtime = maxCPUtime;
 		this.enterTime = currentTime;
-		inMemory = false;
+		address = -1;
+		setInMemory(false);
+		setBlocked(false);
+		setSwapping(false);
+		setTerminated(false);
 	}
-	
+
 	public int getJobNum() {
 		return jobNum;
 	}
@@ -63,5 +73,37 @@ public class Job {
 
 	public void setAddress(int address) {
 		this.address = address;
+	}
+
+	public boolean isInMemory() {
+		return inMemory;
+	}
+
+	public void setInMemory(boolean inMemory) {
+		this.inMemory = inMemory;
+	}
+	
+	public boolean isBlocked() {
+		return blocked;
+	}
+
+	public void setBlocked(boolean blocked) {
+		this.blocked = blocked;
+	}
+	
+	public boolean isSwapping() {
+		return swapping;
+	}
+
+	public void setSwapping(boolean swapping) {
+		this.swapping = swapping;
+	}
+
+	public boolean isTerminated() {
+		return terminated;
+	}
+
+	public void setTerminated(boolean terminated) {
+		this.terminated = terminated;
 	}
 }
