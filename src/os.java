@@ -2,6 +2,7 @@
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Queue;
 
 public class os {
@@ -9,6 +10,8 @@ public class os {
 	static MemoryManager mm;
 	static int currentJobInd;
 	static Queue<Integer> IOQueue;
+	static Queue<Integer> readyQueue;
+	static Queue<Integer> diskQueue;
 	static boolean doingIO;
 	
 	public static void startup(){
@@ -16,7 +19,9 @@ public class os {
 		jobTable = new ArrayList<Job>();
 		mm = new MemoryManager();
 		currentJobInd = 0;
-		IOQueue = new ArrayDeque<Integer>();
+		IOQueue = new PriorityQueue<Integer>();
+		readyQueue = new PriorityQueue<Integer>();
+		diskQueue = new PriorityQueue<Integer>();
 		doingIO = false;
 	}
 	
@@ -78,10 +83,7 @@ public class os {
 			//job is terminated, kick job out of memory
 			if(!job.isTerminated()){
 				System.out.println(currentJobInd + " Terminating");
-				mm.eraseJob(job);
-				job.setTerminated(true);
-				jobTable.remove(currentJobInd);
-				job.setInMemory(false);
+				jobTermination();
 			}
 			else
 				System.out.println(currentJobInd + ": Terminated");
@@ -97,13 +99,24 @@ public class os {
 			System.out.println(currentJobInd +": blocking");
 			job.setBlocked(true);
 		}
-		//swapper();
+		swapper();
 		CPUscheduler(a,p);
 	}
 	
+	//terminate the job
 	public static void Tro(int [] a, int [] p){
 		System.out.println("Inside TRO");
-		//CPUscheduler(a,p);
+		bookkeep(p[5]);
+		
+		Job job = jobTable.get(currentJobInd);
+		int timeLeft = job.getMaxCPUtime() - job.getEnterTime();
+		if(timeLeft == 0){
+			jobTermination();
+		}
+		
+		
+		swapper();
+		CPUscheduler(a,p);
 	}
 	
 	//Keeps track of remaining Max CPU Time
@@ -123,8 +136,11 @@ public class os {
 	
 	private static void swapper() {
 		System.out.println("INSIDE SWAPPER!!!");
-		if(currentJobInd == -1)
+		assignJob();
+		if(currentJobInd == -1){
+			System.out.println("jobInd: " + -1);
 			return;
+		}
 		Job job = jobTable.get(currentJobInd);
 		if(!job.isSwapping()){
 			if(!job.isInMemory()){
@@ -202,7 +218,20 @@ public class os {
 		System.out.println("Running: " + currentJobInd);
 		if(jobTable.isEmpty())
 			currentJobInd = -1;
+		else
+			currentJobInd = 0;
 		System.out.println("Now Running: " + currentJobInd);
+	}
+	
+	private static void jobTermination(){
+		System.out.println("job termination!");
+		Job job = jobTable.get(currentJobInd);
+		
+		mm.eraseJob(job);
+		job.setTerminated(true);
+		jobTable.remove(currentJobInd);
+		job.setInMemory(false);
+		
 	}
 }
 
