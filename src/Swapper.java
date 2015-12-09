@@ -19,6 +19,7 @@ public class Swapper {
 	
 	// job from drum to mem
 	public void swapIn(int jobNum){
+		System.out.println("inside swapper, swapIn");
 		if(jobNum != -1){
 			System.out.println("Swapper swap in of Job: " + jobNum);
 			System.out.println("Job that's in drum: " + jobInDrum);
@@ -28,6 +29,7 @@ public class Swapper {
 	}
 	// job from mem to drum
 	public void swapOut (int jobNum) {
+		System.out.println("inside swapper, swapOut");
 		if(jobNum != -1) {
 			System.out.println("-Swapper swap out of Job: " + jobNum);
 			System.out.println("--Added Job " + jobNum + " to swap queue");
@@ -38,6 +40,8 @@ public class Swapper {
 	
 	//finish swapping
 	public int swapDone(){
+		
+		System.out.println("Inside swapper, done swapping");
 		int jobNum = jobInDrum;
 		jobInDrum = -1;
 		// done swapping
@@ -57,6 +61,7 @@ public class Swapper {
 	
 	private void addToQueues(int jobNum) {
 		// TODO Auto-generated method stub
+		System.out.println("inside swapper, addToQueues");
 		if(jobNum != jobInDrum){
 			removeFromQueues(jobNum);
 			//in queues
@@ -86,6 +91,7 @@ public class Swapper {
 		
 	}
 	private void removeFromQueues(int jobNum) {
+		System.out.println("inside swapper, removeFromQueues");
 		// remove object not index position, so cast as obj
 		blockedMemToDrum.remove((Integer)jobNum); 
 		blockedDrumToMem.remove((Integer)jobNum);
@@ -94,8 +100,8 @@ public class Swapper {
 	}
 
 	//doing the actual swapping
-	public void swap(){
-
+	public int swap(){
+		System.out.println("inside swapper, swap");
 		System.out.println("-Swap Queues:");
 		System.out.println("--unblockedQueue has " + blockedDrumToMem.size());
 		System.out.println("--blockedQueue has " + blockedMemToDrum.size());
@@ -103,6 +109,7 @@ public class Swapper {
 		System.out.println("--drumToMem Queue has " + drumToMem.size());
 		
 		if (jobInDrum == -1) { //choose next job in queue needs to swap
+			System.out.println("jobInDrum: " + jobInDrum);
 			if (!drumToMem.isEmpty()) {
 				jobInDrum = drumToMem.poll();
 			}
@@ -136,5 +143,8 @@ public class Swapper {
 				}
 			}
 		}
-	}
+		return jobInDrum;
+	}//swap
+	
+	
 }

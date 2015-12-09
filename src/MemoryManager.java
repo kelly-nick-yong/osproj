@@ -23,11 +23,11 @@ public class MemoryManager {
 		for(int i= 0; i< MAX; i++){
 			memoryTable.add(0);
 		}
-		setHaveSpace(true);
+		haveSpace= true;
 	}
 	
-	void addToQueues (int jobNum) 
-	{
+	public void addToQueues (int jobNum) {
+		System.out.println("Inside Mem, addToQueues");
 		if (JobTable.getAddress(jobNum) == -1) {
 			blocked.remove((Integer)jobNum);
 			unswapped.remove((Integer)jobNum);
@@ -45,8 +45,32 @@ public class MemoryManager {
 		}
 	}
 	
+	public int nextInQueues(){
+		System.out.println("Inside Mem, nextInQueues");
+		int jobNum =-1;
+		//unswapped job first
+		if(!unswapped.isEmpty()){
+			findSpace(unswapped.getFirst());
+			if(haveSpace)
+				jobNum = unswapped.getFirst();
+		}
+		//swapped job next
+		else if(!swapped.isEmpty()){
+			findSpace(swapped.getFirst());
+			if(haveSpace)
+				jobNum = swapped.getFirst();
+		}
+		//then blocked job
+		else if(!blocked.isEmpty()){
+			findSpace(blocked.getFirst());
+			if(haveSpace)
+				jobNum = blocked.getFirst();
+		}
+		return jobNum;
+	}
+	
 	public void addJob(int jobNum){
-		System.out.println("adding job!!");
+		System.out.println("Inside Mem, addJob!!");
 		if(jobNum == -1){
 			System.out.println("job is -1");
 			return;
@@ -62,7 +86,7 @@ public class MemoryManager {
 	}
 	
 	public void removeJob(int jobNum){
-		System.out.println("removing job!!");
+		System.out.println("Inside Mem, removeJob!!");
 		if(jobNum == -1){
 			System.out.println("job is -1");
 			return;
@@ -73,7 +97,7 @@ public class MemoryManager {
 	
 	//fill in memory table
 	public void fillAddress(int jobNum, int [] begEnd){
-		System.out.println("filling address");
+		System.out.println("Inside Mem, filling address");
 	
 		JobTable.setAddress(jobNum, begEnd[0]);
 		//JobTable.setDirection(jobNum, 0); //into memory
@@ -85,7 +109,7 @@ public class MemoryManager {
 	
 	//best fit
 	public int [] findSpace(int jobNum){
-		System.out.println("Finding Space!!");
+		System.out.println("Inside Mem, Finding Space!!");
 		// beginning index and ending index
 		int beg = -1, end = -1;
 		int tmpBeg =0, tmpEnd=0;
@@ -127,6 +151,7 @@ public class MemoryManager {
 	
 	//remove from job table space
 	public void eraseAddress(int jobNum){
+		System.out.println("Inside Mem, eraseAddress!!");
 		int beg = JobTable.getAddress(jobNum);
 		int end = beg + JobTable.getSize(jobNum) -1;
 		//set 1s into 0s where this job allocated
@@ -138,11 +163,13 @@ public class MemoryManager {
 	
 	//record job is in memory
 	public void addToCore(int jobNum){
+		System.out.println("Inside Mem, addToCore");
 		if(jobNum != -1)
 			jobInCore.add(jobNum);
 	}
 	
 	public void removeFromCore(int jobNum){
+		System.out.println("Inside Mem, removeFromCore");
 		if(jobNum != -1)
 			jobInCore.remove((Integer)jobNum);
 	}
@@ -150,7 +177,7 @@ public class MemoryManager {
 	public void printMemory(){
 		for(int i = 0; i< memoryTable.size(); i++){
 			System.out.print(i + ": " + memoryTable.get(i) + ";  ");
-			if(i%10 == 0)
+			if(i%10 == 0 && i != 0)
 				System.out.println();
 		}
 		System.out.println();
@@ -158,6 +185,7 @@ public class MemoryManager {
 	
 	//add to jobs terminated, that needs to free the memory
 	public void addTerminated(int jobNum){
+		System.out.println("Inside Mem, addTerminated");
 		if(jobNum != -1){
 			if(JobTable.getPendingIO(jobNum) > 0 || JobTable.isDoingIO(jobNum)){
 				terminated.add(jobNum);
@@ -165,11 +193,25 @@ public class MemoryManager {
 
 			}
 			else{
-				eraseAddress(jobNum);
+				removeJob(jobNum);
 				System.out.println("Freeing the memory space that job "
 				+ jobNum + " was taking up.");
 			}
 		}
 	}
+	
+	//remove terminated
+	public void removeTerminated(){
+		System.out.println("Inside Mem, addTerminated");
+		for(int i = 0; i < terminated.size(); i++){
+			int jobNum = terminated.get(i);
+			if(JobTable.getPendingIO(jobNum) == 0){
+				System.out.println("remove terminated: " + jobNum);
+				removeJob(jobNum);
+			}
+		}
+	}
+	
+	
 	
 }

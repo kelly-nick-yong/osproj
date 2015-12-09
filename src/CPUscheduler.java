@@ -31,6 +31,7 @@ public class CPUscheduler {
 	public int [] scheduler(int [] a, int [] p){
 		//exceedTime[0] = exceeded maxCPUtime, free the memory by terminating
 		//exceedTime[1] = exceeded maximum time in memory (1000)
+		System.out.println("inside CPU, scheduler");
 		int [] cpuMemExceed = {-1,-1};
 		
 		if(currentJobInd != -1){
@@ -53,7 +54,7 @@ public class CPUscheduler {
 				currentJobInd = -1;
 			}
 			//exceed max memory time
-			else if((os.currentTime - JobTable.getenterTime(currentJobInd))
+			else if((os.currentTime - JobTable.getEnterTime(currentJobInd))
 					>= MAX_MEM_TIME){
 				if(!JobTable.isDoingIO(currentJobInd) && readyQueue.size() > 4){
 					cpuMemExceed[1] = currentJobInd;
@@ -99,7 +100,7 @@ public class CPUscheduler {
 	
 	//readyQueue
 	public void ready(int jobNum){
-		System.out.println("inside CPU ready:");
+		System.out.println("inside CPU, ready:");
 		if(!JobTable.isTerminated(jobNum) && !JobTable.isBlocked(jobNum)
 				&& !JobTable.isReady(jobNum)){
 			System.out.println("adding to ready queue..");
@@ -109,9 +110,30 @@ public class CPUscheduler {
 			
 	}
 	
+	//terminate current job running
+	public int terminateJob(){
+		System.out.println("inside CPU, terminateJob:");
+		
+		int jobTerminate = currentJobInd;
+		currentJobInd = -1;
+		
+		JobTable.terminate(jobTerminate);
+		JobTable.setReady(jobTerminate, false);
+		System.out.println("terminate: " + jobTerminate);
+		
+		return jobTerminate;
+	}
+	
+	//block current running job
+	public void block(){
+		JobTable.setBlocked(currentJobInd, true);
+		JobTable.setReady(currentJobInd, false);
+		currentJobInd = -1;
+	}
+	
 	//Keeps track of remaining Max CPU Time
 	static void bookkeep(){
-		System.out.println("Inside BOOKKEEP");
+		System.out.println("Inside CPU, BOOKKEEP");
 		int timeSpend = os.currentTime - os.timeBefore;
 		if(currentJobInd != -1){
 			JobTable.setTimeInCPU(currentJobInd, timeSpend);

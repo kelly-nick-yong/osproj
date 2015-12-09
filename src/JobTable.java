@@ -29,12 +29,12 @@ public class JobTable {
 		return jobTable.get(jobInd).size;
 	}
 
-	public static int getmaxCPUTime(int jobNum) {
+	public static int getMaxCPUTime(int jobNum) {
 		int jobInd = jobNum -1;
 		return jobTable.get(jobInd).maxCPUtime;
 	}
 
-	public static int getenterTime(int jobNum) {
+	public static int getEnterTime(int jobNum) {
 		int jobInd = jobNum -1;
 		return jobTable.get(jobInd).enterTime;
 	}
@@ -52,6 +52,11 @@ public class JobTable {
 	public static int getPendingIO(int jobNum){
 		int jobInd = jobNum -1;
 		return jobTable.get(jobInd).pendingIO;
+	}
+	
+	public static void setPendingIO(int jobNum, int pendingIO){
+		int jobInd = jobNum -1;
+		jobTable.get(jobInd).pendingIO = pendingIO;
 	}
 
 	public static int getTimeLeft(int jobNum) {
