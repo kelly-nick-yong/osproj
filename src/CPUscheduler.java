@@ -1,7 +1,7 @@
 import java.util.LinkedList;
 
 public class CPUscheduler {
-	static final int QUANTUM = 5;
+	static final int QUANTUM = 30;
 	static final int MAX_MEM_TIME = 1000;
 	static int currentQuantum;
 	static int currentJobInd;
@@ -37,8 +37,11 @@ public class CPUscheduler {
 		if(currentJobInd != -1){
 			//time left in quantum
 			if(currentQuantum > 0){
-				if(JobTable.getTimeLeft(currentJobInd) < currentQuantum)
-					currentQuantum = JobTable.getTimeLeft(currentJobInd);
+				//job have less than quantum time, run to finish
+				//if not run quantum amount of time, switch to other jobs
+				int timeLeft = JobTable.getTimeLeft(currentJobInd);
+				currentQuantum = (timeLeft < QUANTUM)? timeLeft : QUANTUM;
+
 				// Running stays the same
 				System.out.println("-CPUScheduler resumes Job " + currentJobInd
 				 + " with " + currentQuantum + " remaining");
@@ -79,15 +82,23 @@ public class CPUscheduler {
 				System.out.println("Next job: " + currentJobInd);
 				
 				int timeLeft = JobTable.getTimeLeft(currentJobInd);
-				currentQuantum = (timeLeft < currentQuantum)? timeLeft : currentQuantum;
+				//job have less than quantum time, run to finish
+				//if not run quantum amount of time, switch to other jobs
+				currentQuantum = (timeLeft < QUANTUM)? timeLeft : QUANTUM;
+				System.out.println("TIME LEFT: " + timeLeft);
 			}
-			else{
-				//no job running and waiting
-				a[0] = 1;
-			}
+		
 		}
 		
+		System.out.println("CURRENT QUANTUM: " + currentQuantum);
+		
+		if(currentJobInd == -1){ //still -1
+			System.out.println("a set to 1..  no job to run");
+			//no job running and waiting
+			a[0] = 1;
+		}
 		else{
+			System.out.println("a set to 2.. run mode");
 			a[0] = 2;
 			p[1] = currentJobInd;
 			p[2] = JobTable.getAddress(currentJobInd);
@@ -98,7 +109,7 @@ public class CPUscheduler {
 		return cpuMemExceed;
 	}// end of scheduler
 	
-	//readyQueue
+	//readyQueue for cpu process later
 	public void ready(int jobNum){
 		System.out.println("inside CPU, ready:");
 		if(!JobTable.isTerminated(jobNum) && !JobTable.isBlocked(jobNum)
@@ -135,9 +146,11 @@ public class CPUscheduler {
 	static void bookkeep(){
 		System.out.println("Inside CPU, BOOKKEEP");
 		int timeSpend = os.currentTime - os.timeBefore;
+		System.out.println("TIME SPEND: " + timeSpend);
 		if(currentJobInd != -1){
 			JobTable.setTimeInCPU(currentJobInd, timeSpend);
 			currentQuantum = currentQuantum - timeSpend;
 		}
+		System.out.println("CURRENT QUANTUM: " + currentQuantum);
 	}
 }

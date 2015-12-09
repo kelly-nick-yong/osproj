@@ -159,6 +159,7 @@ public class MemoryManager {
 			memoryTable.set(i, 0);
 		}
 		JobTable.setAddress(jobNum, -1);
+		printMemory();
 	}
 	
 	//record job is in memory
@@ -189,13 +190,14 @@ public class MemoryManager {
 		if(jobNum != -1){
 			if(JobTable.getPendingIO(jobNum) > 0 || JobTable.isDoingIO(jobNum)){
 				terminated.add(jobNum);
-				System.out.println("The process to be terminated is still doingIO or still have pending IO requests");
+				System.out.println("The process to be terminated is "
+						+ "still doingIO or still have pending IO requests");
 
 			}
 			else{
 				removeJob(jobNum);
-				System.out.println("Freeing the memory space that job "
-				+ jobNum + " was taking up.");
+				System.out.println("erasing the memory space for job: "
+						+ jobNum);
 			}
 		}
 	}
@@ -209,6 +211,7 @@ public class MemoryManager {
 				System.out.println("remove terminated: " + jobNum);
 				removeJob(jobNum);
 			}
+			
 		}
 	}
 	

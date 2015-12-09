@@ -50,6 +50,14 @@ public class os {
 	// Interrupt when job finishes doing IO.
 	public static void Dskint(int [] a, int [] p){
 		System.out.println("\nInside DSKINT");
+		timeUpdate(p);
+		cpu.bookkeep();
+		//job finished IO
+		int jobNum = IO.finishIO();
+		cpu.ready(jobNum);
+		IO.IOplacement(jobNum);
+		
+		recheck(a,p);
 	}
 	
 	//interrupt after swapping
@@ -84,10 +92,10 @@ public class os {
         //If *a=6: the job is requesting another disk I/O operation.
         //If *a=7: the job is requesting to be blocked until all pending I/O requests are completed.
 	
-
+		System.out.println("a[0] = " + a[0]);
 		// The job is requesting termination
 		if (a[0] == 5) {
-			// System.out.println("Requesting termination");
+			System.out.println("Requesting termination: a = 5");
 			int jobNum = cpu.terminateJob();
 			jobTable.setDirection(jobNum, -1);
 			mm.addTerminated(jobNum);
@@ -96,16 +104,18 @@ public class os {
 		}
 		// The job is requesting another I/O operation
 		else if (a[0] == 6) {
-			// System.out.println("Requesting another i/o operation");
+			System.out.println("Requesting another i/o operation: a = 6");
 			int jobNum = cpu.currentJobInd;
+			System.out.println("cpu current running job: " + jobNum);
 			IO.newIOjob(jobNum);
 		}
 		// The job is requesting to be blocked until all pending
 		// I/O requests are completed
 		else if (a[0] == 7) {
-			// System.out.println(
-			// 	"Block until all pending I/O requests are completed");
+			System.out.println("Block until all pending "
+					+ "I/O requests are completed: a = 7");
 			int jobNum = cpu.currentJobInd;
+			System.out.println("cpu current running job: " + jobNum);
 			// If job is using I/O, block, but don't free
 			if (IO.isProcessingIO(jobNum)) {
 				// System.out.println("-I/O: Job is doing I/O");
@@ -126,6 +136,8 @@ public class os {
 				System.out.println("-I/O: Job has no pending I/O");
 			}
 		}
+		
+		recheck(a,p);
 	}
 	
 	//terminate the job

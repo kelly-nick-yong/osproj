@@ -132,7 +132,7 @@ public class Swapper {
 				else {
 					JobTable.setSwapping(jobInDrum, true);
 					Job job = JobTable.getJob(jobInDrum);
-					System.out.println("inDrum: " + jobInDrum);
+					System.out.println("jobInDrum: " + jobInDrum);
 					System.out.println("--Begin swapping Job " +
 							job.jobNum +" with size " + job.size +
 							" address:"+ job.address);
