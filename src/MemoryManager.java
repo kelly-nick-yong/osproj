@@ -6,14 +6,14 @@ public class MemoryManager {
 	List<Integer> memoryTable;
 	LinkedList<Integer> jobInCore; //jobs in memory
 	LinkedList<Integer> blocked; //blocked jobs
-	LinkedList<Integer> swapped; //swapped jobs
+	//LinkedList<Integer> swapped; //swapped jobs
 	LinkedList<Integer> unswapped; //not swapped jobs
 	LinkedList<Integer> terminated; //terminated jobs
 	static int [] spaceBegEnd = {-1, -1};
 	
 	public MemoryManager(){
 		blocked = new LinkedList<Integer>();
-		swapped = new LinkedList<Integer>();
+		//swapped = new LinkedList<Integer>();
 		unswapped = new LinkedList<Integer>();
 		terminated = new LinkedList<Integer>();
 		
@@ -28,7 +28,7 @@ public class MemoryManager {
 	public void printQueues(){
 		System.out.println("terminated num: "+ terminated.size());
 		System.out.println("blocked num: "+ blocked.size());
-		System.out.println("swapped num: "+ swapped.size());
+		//System.out.println("swapped num: "+ swapped.size());
 		System.out.println("unswapped num: "+ unswapped.size());
 	}
 	
@@ -37,16 +37,18 @@ public class MemoryManager {
 		if (JobTable.getAddress(jobNum) == -1) {
 			blocked.remove((Integer)jobNum);
 			unswapped.remove((Integer)jobNum);
-			swapped.remove((Integer)jobNum);
+			//swapped.remove((Integer)jobNum);
 			
 			if (JobTable.isBlocked(jobNum)) {
 				System.out.println("add job to blocked..");
 				blocked.add(jobNum);
 			}
+			/*
 			else if (JobTable.isSwapped(jobNum)) {
 				System.out.println("add job to swapped..");
 				swapped.add(jobNum);
 			}
+			*/
 			else {
 				System.out.println("add job to unswapped..");
 				unswapped.add(jobNum);
@@ -70,6 +72,7 @@ public class MemoryManager {
 						+ unswapped.poll());
 		}
 		//swapped job next
+		/*
 		else if(!swapped.isEmpty()){
 			if( findSpace(swapped.poll()) ){
 				jobNum = swapped.poll();
@@ -79,7 +82,7 @@ public class MemoryManager {
 			else
 				System.out.println("Not Enough Space for job: "
 						+ swapped.poll());
-		}
+		}*/
 		//then blocked job
 		else if(!blocked.isEmpty()){
 			if( findSpace(blocked.poll()) ){
@@ -181,7 +184,6 @@ public class MemoryManager {
 					bestFitLen = tempLen;
 					spaceBegEnd[0] = tmpBeg;
 					spaceBegEnd[1] = tmpEnd;
-					//tempLen = 0;
 					System.out.println("size needed: " + sizeNeeded
 							+ " bestFitLen: " + bestFitLen);
 					System.out.println("Address finding: "+ spaceBegEnd[0] + " to " 

@@ -45,7 +45,7 @@ public class os {
 		swapper.swapIn(jobNum);
 		swapper.swap();
 		
-		recheck(a,p);
+		check(a,p);
 	}
 
 	// Interrupt when job finishes doing IO.
@@ -55,10 +55,10 @@ public class os {
 		cpu.bookkeep();
 		//job finished IO
 		int jobNum = IO.finishIO();
-		cpu.ready(jobNum);
+		cpu.readyToRun(jobNum);
 		IO.IOplacement(jobNum);
 		
-		recheck(a,p);
+		check(a,p);
 	}
 	
 	//interrupt after swapping
@@ -73,7 +73,7 @@ public class os {
 		if(dir == 0){ //drum to mem
 			System.out.println("drum to mem");
 			mm.addToCore(jobNum);
-			cpu.ready(jobNum);
+			cpu.readyToRun(jobNum);
 		}
 		else if(dir == 1){ //mem to drum
 			System.out.println("mem to drum");
@@ -81,7 +81,7 @@ public class os {
 		}
 		IO.processIO();
 		
-		recheck(a,p);
+		check(a,p);
 	}
 	
 	//interrupt to serve the job's need
@@ -103,42 +103,32 @@ public class os {
 			// Moves IO to terminated queue
 			IO.IOplacement(jobNum);
 		}
-		// The job is requesting another I/O operation
+		// The job is requesting another IO operation
 		else if (a[0] == 6) {
-			System.out.println("Requesting another i/o operation: a = 6");
+			System.out.println("Requesting IO: a = 6");
 			int jobNum = cpu.currentJobInd;
 			System.out.println("cpu current running job: " + jobNum);
 			IO.newIOjob(jobNum);
 		}
 		// The job is requesting to be blocked until all pending
-		// I/O requests are completed
+		// IO requests are completed
 		else if (a[0] == 7) {
-			System.out.println("Block until all pending "
-					+ "I/O requests are completed: a = 7");
+			System.out.println("if no more pendingIO, block job: a = 7");
 			int jobNum = cpu.currentJobInd;
 			System.out.println("cpu current running job: " + jobNum);
-			// If job is using I/O, block, but don't free
-			if (IO.isProcessingIO(jobNum)) {
-				// System.out.println("-I/O: Job is doing I/O");
-				cpu.block();
+			// If job is using IO, block, but don't free
+			// or If jobs are pending, block and free
+			if (IO.isProcessingIO(jobNum) 
+					|| jobTable.getPendingIO(jobNum) > 0) {
+				cpu.blockCurrentJob();
 				IO.IOplacement(jobNum);
 			}
-			// If jobs are pending, block and free
-			else if (jobTable.getPendingIO(jobNum) > 0) {
-				// System.out.println("-I/O: Job has pending I/O");
-				cpu.block();
-				/*if (mm.smartSwap()) {
-					swapper.swapOut(jobNum);
-				}*/
-				IO.IOplacement(jobNum);
-			}
-			// If job not using I/O and no pending I/O, ignore
 			else {
-				System.out.println("-I/O: Job has no pending I/O");
+				System.out.println("Job has no pending IO");
 			}
 		}
 		
-		recheck(a,p);
+		check(a,p);
 	}
 	
 	//quantum time ended
@@ -147,7 +137,7 @@ public class os {
 		timeUpdate(p);
 		cpu.bookkeep();
 		
-		recheck(a,p);
+		check(a,p);
 	}
 	
 	
@@ -161,10 +151,10 @@ public class os {
 		mm.removeTerminated();
 	}
 	
-	public static void recheck(int [] a, int [] p){
+	public static void check(int [] a, int [] p){
 		//exceedTime[0] = exceeded maxCPUtime, free the memory by terminating
 		//exceedTime[1] = exceeded maximum time in memory (1000)
-		System.out.println("recheck..");
+		System.out.println("CHECK..");
 		int [] cpuMemExceed = cpu.scheduler(a, p);
 		int jobNum = -1;
 		//terminate job exceeded max cpu time

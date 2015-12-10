@@ -46,7 +46,7 @@ public class Swapper {
 		jobInDrum = -1;
 		// done swapping
 		JobTable.setSwapping(jobNum, false);
-		JobTable.setCurrentTime(jobNum);
+		//JobTable.setCurrentTime(jobNum);
 		
 		if(JobTable.getDirection(jobNum) == 0 ){ //get into mem
 			JobTable.setInMemory(jobNum, true);

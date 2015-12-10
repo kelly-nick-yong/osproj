@@ -1,7 +1,7 @@
 import java.util.LinkedList;
 
 public class CPUscheduler {
-	static final int QUANTUM = 200;
+	static final int QUANTUM = 100;
 	static final int MAX_MEM_TIME = 1000;
 	static int currentQuantum;
 	static int currentJobInd;
@@ -110,7 +110,7 @@ public class CPUscheduler {
 	}// end of scheduler
 	
 	//readyQueue for cpu process later
-	public void ready(int jobNum){
+	public void readyToRun(int jobNum){
 		System.out.println("inside CPU, ready:");
 		if(!JobTable.isTerminated(jobNum) && !JobTable.isBlocked(jobNum)
 				&& !JobTable.isReady(jobNum)){
@@ -136,7 +136,8 @@ public class CPUscheduler {
 	}
 	
 	//block current running job
-	public void block(){
+	public void blockCurrentJob(){
+		System.out.println("inside CPU, blockCurrentJob:");
 		JobTable.setBlocked(currentJobInd, true);
 		JobTable.setReady(currentJobInd, false);
 		currentJobInd = -1;
