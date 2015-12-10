@@ -15,7 +15,7 @@ public class os {
 	public static JobTable jobTable;
 	
 	public static void startup(){
-		//sos.ontrace();
+		sos.ontrace();
 		currentTime = 0;
 		timeBefore = 0;
 		mm = new MemoryManager();
@@ -94,7 +94,7 @@ public class os {
         //If *a=7: the job is requesting to be blocked until all pending I/O requests are completed.
 	
 		System.out.println("a[0] = " + a[0]);
-		// The job is requesting termination
+		//requesting termination
 		if (a[0] == 5) {
 			System.out.println("Requesting termination: a = 5");
 			int jobNum = cpu.terminateJob();
@@ -103,28 +103,23 @@ public class os {
 			// Moves IO to terminated queue
 			IO.IOplacement(jobNum);
 		}
-		// The job is requesting another IO operation
+		//requesting IO 
 		else if (a[0] == 6) {
 			System.out.println("Requesting IO: a = 6");
 			int jobNum = cpu.currentJobInd;
 			System.out.println("cpu current running job: " + jobNum);
 			IO.newIOjob(jobNum);
 		}
-		// The job is requesting to be blocked until all pending
-		// IO requests are completed
+		// request blocking the job (when IO, and pending IO requests are done)
 		else if (a[0] == 7) {
-			System.out.println("if there is pendingIO, block job: a = 7");
+			System.out.println("if job has pendingIO or Doing IO, block job: a = 7");
 			int jobNum = cpu.currentJobInd;
 			System.out.println("cpu current running job: " + jobNum);
-			// If job is using IO, block, but don't free
-			// or If jobs are pending, block and free
+			// If job is using IO or If jobs are pending, block and free
 			if (IO.isProcessingIO(jobNum) 
-					|| jobTable.getPendingIO(jobNum) > 0) {
+					|| jobTable.getIOrequests(jobNum) > 0) {
 				cpu.blockCurrentJob();
 				IO.IOplacement(jobNum);
-			}
-			else {
-				System.out.println("Job has no pending IO");
 			}
 		}
 		

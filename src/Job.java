@@ -6,7 +6,7 @@ public class Job {
 	int maxCPUtime; //job have this much time on cpu, then terminates
 	int enterTime;
 	int timeInCPU; //job's time spended in cpu
-	int pendingIO; //number of I/O request pending
+	int IOrequests; //number of I/O request pending
 	int address;
 	int direction; // 0: Drum-to-Memory, 1: Memory-to-Drum, -1: No Swap
 	boolean inMemory;
@@ -28,7 +28,7 @@ public class Job {
 		this.enterTime = p[5];
 		timeInCPU = 0;
 		address = -1;
-		pendingIO = 0;
+		IOrequests = 0;
 		direction = -1;
 		inMemory = false;
 		blocked = false;

@@ -6,14 +6,12 @@ public class MemoryManager {
 	List<Integer> memoryTable;
 	LinkedList<Integer> jobInCore; //jobs in memory
 	LinkedList<Integer> blocked; //blocked jobs
-	//LinkedList<Integer> swapped; //swapped jobs
 	LinkedList<Integer> unswapped; //not swapped jobs
 	LinkedList<Integer> terminated; //terminated jobs
 	static int [] spaceBegEnd = {-1, -1};
 	
 	public MemoryManager(){
 		blocked = new LinkedList<Integer>();
-		//swapped = new LinkedList<Integer>();
 		unswapped = new LinkedList<Integer>();
 		terminated = new LinkedList<Integer>();
 		
@@ -28,27 +26,17 @@ public class MemoryManager {
 	public void printQueues(){
 		System.out.println("terminated num: "+ terminated.size());
 		System.out.println("blocked num: "+ blocked.size());
-		//System.out.println("swapped num: "+ swapped.size());
 		System.out.println("unswapped num: "+ unswapped.size());
 	}
 	
 	public void addToQueues (int jobNum) {
 		System.out.println("Inside Mem, addToQueues");
 		if (JobTable.getAddress(jobNum) == -1) {
-			//blocked.remove((Integer)jobNum);
-			//unswapped.remove((Integer)jobNum);
-			//swapped.remove((Integer)jobNum);
 			
 			if (JobTable.isBlocked(jobNum)) {
 				System.out.println("add job to blocked..");
 				blocked.add(jobNum);
 			}
-			/*
-			else if (JobTable.isSwapped(jobNum)) {
-				System.out.println("add job to swapped..");
-				swapped.add(jobNum);
-			}
-			*/
 			else {
 				System.out.println("add job to unswapped..");
 				unswapped.add(jobNum);
@@ -71,18 +59,7 @@ public class MemoryManager {
 				System.out.println("Not Enough Space for job: "
 						+ unswapped.poll());
 		}
-		//swapped job next
-		/*
-		else if(!swapped.isEmpty()){
-			if( findSpace(swapped.poll()) ){
-				jobNum = swapped.poll();
-				System.out.println("add job from swapped: " 
-						+ swapped.poll());
-			}
-			else
-				System.out.println("Not Enough Space for job: "
-						+ swapped.poll());
-		}*/
+		
 		//then blocked job
 		else if(!blocked.isEmpty()){
 			if( findSpace(blocked.poll()) ){
@@ -125,7 +102,6 @@ public class MemoryManager {
 		System.out.println("Inside Mem, filling address");
 	
 		JobTable.setAddress(jobNum, begEnd[0]);
-		//JobTable.setDirection(jobNum, 0); //into memory
 		System.out.println("job: "+ jobNum + " with size: "+ JobTable.getSize(jobNum)
 			+ " address from "+ begEnd[0]+ " to " + begEnd[1]);
 		for(int i= begEnd[0]; i<= begEnd[1]; i++){
@@ -241,10 +217,10 @@ public class MemoryManager {
 	public void addTerminated(int jobNum){
 		System.out.println("Inside Mem, addTerminated");
 		if(jobNum != -1){
-			if(JobTable.getPendingIO(jobNum) > 0 || JobTable.isDoingIO(jobNum)){
+			if(JobTable.getIOrequests(jobNum) > 0 || JobTable.isDoingIO(jobNum)){
 				terminated.add(jobNum);
-				System.out.println("The process to be terminated is "
-						+ "still doingIO or still have pending IO requests");
+				System.out.println("The job to be terminated "
+						+ "is doingIO or have pending IO requests");
 
 			}
 			else{
@@ -260,7 +236,7 @@ public class MemoryManager {
 		System.out.println("Inside Mem, addTerminated");
 		for(int i = 0; i < terminated.size(); i++){
 			int jobNum = terminated.get(i);
-			if(JobTable.getPendingIO(jobNum) == 0){
+			if(JobTable.getIOrequests(jobNum) == 0){
 				System.out.println("remove terminated: " + jobNum);
 				terminated.remove(i);
 				removeJob(jobNum);

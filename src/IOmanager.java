@@ -21,8 +21,8 @@ public class IOmanager {
 	public void newIOjob(int jobNum){
 		System.out.println("Inside IO, newIOjob");
 		//increments pendingIO request
-		int pendingIO = JobTable.getPendingIO(jobNum);
-		JobTable.setPendingIO(jobNum, pendingIO +1);
+		int pendingIO = JobTable.getIOrequests(jobNum);
+		JobTable.setIOrequests(jobNum, pendingIO +1);
 		
 		unblocked.add(jobNum);
 		processIO();
@@ -108,10 +108,10 @@ public class IOmanager {
 		jobInIO = -1;
 		if(jobNum != -1){
 			//one less pending io request
-			JobTable.setPendingIO(jobNum, JobTable.getPendingIO(jobNum) -1);
+			JobTable.setIOrequests(jobNum, JobTable.getIOrequests(jobNum) -1);
 			JobTable.setDoingIO(jobNum, false);
 			
-			if(JobTable.getPendingIO(jobNum) == 0 
+			if(JobTable.getIOrequests(jobNum) == 0 
 					&& JobTable.isBlocked(jobNum)){
 				JobTable.setBlocked(jobNum, false);
 			}
@@ -132,7 +132,7 @@ public class IOmanager {
 	public void IOplacement(int jobNum){
 		System.out.println("Inside IO, IOplacement");
 		if(jobNum != -1){
-			int pendingIOs = JobTable.getPendingIO(jobNum); //pending IO requests
+			int pendingIOs = JobTable.getIOrequests(jobNum); //pending IO requests
 			System.out.println("Job that has IO pending: " + pendingIOs);
 			
 			if(pendingIOs > 0){ //there is io request

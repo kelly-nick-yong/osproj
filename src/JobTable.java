@@ -49,14 +49,14 @@ public class JobTable {
 		jobTable.get(jobInd).address = address;
 	}
 	
-	public static int getPendingIO(int jobNum){
+	public static int getIOrequests(int jobNum){
 		int jobInd = jobNum -1;
-		return jobTable.get(jobInd).pendingIO;
+		return jobTable.get(jobInd).IOrequests;
 	}
 	
-	public static void setPendingIO(int jobNum, int pendingIO){
+	public static void setIOrequests(int jobNum, int pendingIO){
 		int jobInd = jobNum -1;
-		jobTable.get(jobInd).pendingIO = pendingIO;
+		jobTable.get(jobInd).IOrequests = pendingIO;
 	}
 
 	public static int getTimeLeft(int jobNum) {
