@@ -30,7 +30,7 @@ public class os {
        At call : p [1] = job number
        p [2] = priority
        p [3] = job size, K bytes
-       p [4] = max CPU time allowed for job
+       p [4] = max CPU time needed for job
        p [5] = current time
 	 */
 	//interrupt when job comes in, store the job in jobtable
@@ -41,9 +41,10 @@ public class os {
 		
 		jobTable.add(p);
 		int jobNum = p[1];
-		mm.addJob(jobNum);
+		jobNum = mm.addJob(jobNum); //able to add or not (-1)
 		swapper.swapIn(jobNum);
 		swapper.swap();
+		
 		recheck(a,p);
 	}
 
@@ -67,8 +68,8 @@ public class os {
 		cpu.bookkeep();
 		//return index after done swapping
 		int jobNum = swapper.swapDone();
-		
 		int dir = jobTable.getDirection(jobNum);
+		System.out.println("swap done: " + jobNum + " dir: " + dir);
 		if(dir == 0){ //drum to mem
 			System.out.println("drum to mem");
 			mm.addToCore(jobNum);
@@ -140,7 +141,7 @@ public class os {
 		recheck(a,p);
 	}
 	
-	//terminate the job
+	//quantum time ended
 	public static void Tro(int [] a, int [] p){
 		System.out.println("\nInside TRO");
 		timeUpdate(p);
@@ -172,12 +173,13 @@ public class os {
 		swapper.swapOut(IO.swapOutReady());
 		//if blocked job wants to swap into mem
 		jobNum = IO.swapInReady();
-		mm.addJob(jobNum);
+		jobNum = mm.addJob(jobNum); //able to add, return added index
 		swapper.swapIn(jobNum);
 		//swap out job exceeded max mem time
 		swapper.swapOut(cpuMemExceed[1]);
 		//next job in queues to swap in
 		jobNum = mm.nextInQueues();
+		jobNum = mm.addJob(jobNum); //able to add, return added index
 		swapper.swapIn(jobNum);
 		//if there is any to swap
 		jobNum =swapper.swap();

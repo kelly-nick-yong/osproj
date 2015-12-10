@@ -1,7 +1,7 @@
 import java.util.LinkedList;
 
 public class CPUscheduler {
-	static final int QUANTUM = 30;
+	static final int QUANTUM = 200;
 	static final int MAX_MEM_TIME = 1000;
 	static int currentQuantum;
 	static int currentJobInd;
@@ -52,7 +52,7 @@ public class CPUscheduler {
 				System.out.println("-CPUScheduler stops Job " + currentJobInd 
 						+ " (exceeds max CPU time)");
 				cpuMemExceed[0] = currentJobInd;
-				JobTable.terminate(currentJobInd);
+				JobTable.setTerminated(currentJobInd, true);
 				JobTable.setReady(currentJobInd, false);
 				currentJobInd = -1;
 			}
@@ -128,7 +128,7 @@ public class CPUscheduler {
 		int jobTerminate = currentJobInd;
 		currentJobInd = -1;
 		
-		JobTable.terminate(jobTerminate);
+		JobTable.setTerminated(jobTerminate, true);
 		JobTable.setReady(jobTerminate, false);
 		System.out.println("terminate: " + jobTerminate);
 		

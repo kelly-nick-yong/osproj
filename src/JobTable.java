@@ -102,9 +102,9 @@ public class JobTable {
 		return jobTable.get(jobInd).terminated;
 	}
 
-	public static void terminate(int jobNum) {
+	public static void setTerminated(int jobNum, boolean terminated) {
 		int jobInd = jobNum -1;
-		jobTable.get(jobInd).terminated = true;
+		jobTable.get(jobInd).terminated = terminated;
 	}
 
 	public static boolean isBlocked(int jobNum) {
