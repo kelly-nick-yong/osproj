@@ -93,9 +93,9 @@ public class JobTable {
 		return jobTable.get(jobInd).inMemory;
 	}
 
-	public static void setInMemory(int jobNum, boolean state) {
+	public static void setInMemory(int jobNum, boolean inMemory) {
 		int jobInd = jobNum -1;
-		jobTable.get(jobInd).inMemory = state;
+		jobTable.get(jobInd).inMemory = inMemory;
 	}
 
 	public static boolean isTerminated(int jobNum) {
@@ -117,16 +117,6 @@ public class JobTable {
 		int jobInd = jobNum -1;
 		System.out.println("Setting blocked to " + blocked);
 		jobTable.get(jobInd).blocked = blocked;
-	}
-
-	public static boolean isSwapped(int jobNum) {
-		int jobInd = jobNum -1;
-		return jobTable.get(jobInd).swapped;
-	}
-
-	public static void setSwapped(int jobNum, boolean swapped) {
-		int jobInd = jobNum -1;
-		jobTable.get(jobInd).swapped = swapped;
 	}
 
 	public static boolean isSwapping(int jobNum) {

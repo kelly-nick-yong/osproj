@@ -1,6 +1,6 @@
 import java.util.LinkedList;
 
-public class IOScheduler {
+public class IOmanager {
 	LinkedList<Integer> unblocked;	 // IO for unblocked jobs	
 	LinkedList<Integer> blockedInCore; // IO for blocked, in memory jobs
 	LinkedList<Integer> blockedInDrum;// IO for blocked, in drum jobs
@@ -8,7 +8,7 @@ public class IOScheduler {
 	//LinkedList<Integer> requestedSwap; //job requested to swap
 	int jobInIO;		//current job in IO
 	
-	IOScheduler(){
+	IOmanager(){
 		unblocked = new LinkedList<Integer>();
 		blockedInCore = new LinkedList<Integer>();
 		blockedInDrum = new LinkedList<Integer>();

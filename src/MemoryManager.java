@@ -35,8 +35,8 @@ public class MemoryManager {
 	public void addToQueues (int jobNum) {
 		System.out.println("Inside Mem, addToQueues");
 		if (JobTable.getAddress(jobNum) == -1) {
-			blocked.remove((Integer)jobNum);
-			unswapped.remove((Integer)jobNum);
+			//blocked.remove((Integer)jobNum);
+			//unswapped.remove((Integer)jobNum);
 			//swapped.remove((Integer)jobNum);
 			
 			if (JobTable.isBlocked(jobNum)) {

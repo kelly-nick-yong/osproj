@@ -53,7 +53,7 @@ public class Swapper {
 		}
 		else{  //get out of mem
 			JobTable.setInMemory(jobNum, false);
-			JobTable.setSwapped(jobNum, true);
+			//JobTable.setSwapped(jobNum, true);
 		}
 		
 		return jobNum;
@@ -103,8 +103,8 @@ public class Swapper {
 	public int swap(){
 		System.out.println("inside swapper, swap");
 		System.out.println("-Swap Queues:");
-		System.out.println("--unblockedQueue has " + blockedDrumToMem.size());
-		System.out.println("--blockedQueue has " + blockedMemToDrum.size());
+		System.out.println("--blockedDrumToMem has " + blockedDrumToMem.size());
+		System.out.println("--blockedMemToDrum has " + blockedMemToDrum.size());
 		System.out.println("--memToDrum has " + memToDrum.size());
 		System.out.println("--drumToMem Queue has " + drumToMem.size());
 		

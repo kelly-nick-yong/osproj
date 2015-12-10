@@ -7,9 +7,9 @@ import java.util.Queue;
 
 public class os {
 	public static int currentTime; // current time use for bookkeep and other
-	public static int timeBefore; // last time 
-	public static IOScheduler IO;
-	public static CPUscheduler cpu;
+	public static int timeBefore; // last updated time 
+	public static IOmanager IO;
+	public static CPU cpu;
 	public static MemoryManager mm;
 	public static Swapper swapper;
 	public static JobTable jobTable;
@@ -19,10 +19,10 @@ public class os {
 		currentTime = 0;
 		timeBefore = 0;
 		mm = new MemoryManager();
-		cpu = new CPUscheduler();
+		cpu = new CPU();
 		swapper = new Swapper();
 		jobTable = new JobTable();
-		IO = new IOScheduler();
+		IO = new IOmanager();
 	}
 	
 	/**
@@ -113,7 +113,7 @@ public class os {
 		// The job is requesting to be blocked until all pending
 		// IO requests are completed
 		else if (a[0] == 7) {
-			System.out.println("if no more pendingIO, block job: a = 7");
+			System.out.println("if there is pendingIO, block job: a = 7");
 			int jobNum = cpu.currentJobInd;
 			System.out.println("cpu current running job: " + jobNum);
 			// If job is using IO, block, but don't free

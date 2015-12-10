@@ -1,13 +1,13 @@
 import java.util.LinkedList;
 
-public class CPUscheduler {
+public class CPU {
 	static final int QUANTUM = 100;
 	static final int MAX_MEM_TIME = 1000;
 	static int currentQuantum;
 	static int currentJobInd;
 	LinkedList<Integer> readyQueue;
 	
-	public CPUscheduler(){
+	public CPU(){
 		currentJobInd = -1;
 		readyQueue = new LinkedList<Integer>();
 		currentQuantum = QUANTUM;
