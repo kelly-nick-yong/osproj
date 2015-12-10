@@ -8,11 +8,11 @@ import java.util.Queue;
 public class os {
 	public static int currentTime; // current time use for bookkeep and other
 	public static int timeBefore; // last updated time 
-	public static IOmanager IO;
-	public static CPU cpu;
-	public static MemoryManager mm;
-	public static Swapper swapper;
-	public static JobTable jobTable;
+	public static IOmanager IO; // scheduling for IOs
+	public static CPU cpu; // cpu scheduler
+	public static MemoryManager mm; //keep track of memory table
+	public static Swapper swapper; //swapping jobs drum mem
+	public static JobTable jobTable; // job list, and manipulating jobs
 	
 	public static void startup(){
 		sos.ontrace();
@@ -36,14 +36,15 @@ public class os {
 	//interrupt when job comes in, store the job in jobtable
 	public static void Crint(int [] a, int [] p){
 		System.out.println("\nINSIDE CRINT!!!");
-		timeUpdate(p);
-		cpu.bookkeep();
+		timeUpdate(p); //update the current time and save the last time
+		cpu.bookkeep(); //tracking remaining max cpu time
 		
-		jobTable.add(p);
+		jobTable.add(p); //add the job to jobtable
 		int jobNum = p[1];
+		//filling the memory table, and swap into mem
 		jobNum = mm.addJob(jobNum); //able to add or not (-1)
-		swapper.swapIn(jobNum);
-		swapper.swap();
+		swapper.swapIn(jobNum); //set dir, and put in queue to swap to mem
+		swapper.swap(); //actual swap happens
 		
 		check(a,p);
 	}
@@ -54,11 +55,11 @@ public class os {
 		timeUpdate(p);
 		cpu.bookkeep();
 		//job finished IO
-		int jobNum = IO.finishIO();
-		cpu.readyToRun(jobNum);
-		IO.IOplacement(jobNum);
+		int jobNum = IO.finishIO(); //-1 means failed
+		cpu.readyToRun(jobNum); //put in readyQueue to run on cpu 
+		IO.IOplacement(jobNum); //queues in IO
 		
-		check(a,p);
+		check(a,p); //cpu scheduling next job and other checking
 	}
 	
 	//interrupt after swapping
@@ -155,11 +156,13 @@ public class os {
 		//terminate job exceeded max cpu time
 		mm.addTerminated(cpuMemExceed[0]);
 		//check blocked job wants to swap out from mem
+		/*
 		swapper.swapOut(IO.swapOutReady());
 		//if blocked job wants to swap into mem
 		jobNum = IO.swapInReady();
 		jobNum = mm.addJob(jobNum); //able to add, return added index
 		swapper.swapIn(jobNum);
+		*/
 		//swap out job exceeded max mem time
 		swapper.swapOut(cpuMemExceed[1]);
 		//next job in queues to swap in

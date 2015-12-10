@@ -3,17 +3,17 @@ import java.util.LinkedList;
 public class Swapper {
 	// swapin = 0, swapout = 1
 	int jobInDrum; //current job in drum index
-	LinkedList<Integer> blockedMemToDrum;	// jobNum is blocked, out
-	LinkedList<Integer> blockedDrumToMem;		// jobNum is blocked, in
+	//LinkedList<Integer> blockedMemToDrum;	// jobNum is blocked, out
+	//LinkedList<Integer> blockedDrumToMem;		// jobNum is blocked, in
 	LinkedList<Integer> memToDrum;	// To be swapped out
 	LinkedList<Integer> drumToMem;		// To be swapped in
 	
 	Swapper(){
 		jobInDrum = -1;
 		
-		blockedMemToDrum = new LinkedList<Integer>();
+		//blockedMemToDrum = new LinkedList<Integer>();
 		memToDrum = new LinkedList<Integer>();
-		blockedDrumToMem = new LinkedList<Integer>();
+		//blockedDrumToMem = new LinkedList<Integer>();
 		drumToMem = new LinkedList<Integer>();
 	}
 	
@@ -21,6 +21,7 @@ public class Swapper {
 	public void swapIn(int jobNum){
 		System.out.println("inside swapper, swapIn");
 		if(jobNum != -1){
+			//set the dir and add it to queues
 			System.out.println("Swapper swap in of Job: " + jobNum);
 			System.out.println("Job that's in drum: " + jobInDrum);
 			JobTable.setDirection(jobNum, 0);
@@ -31,6 +32,7 @@ public class Swapper {
 	public void swapOut (int jobNum) {
 		System.out.println("inside swapper, swapOut");
 		if(jobNum != -1) {
+			//set the dir and add it to queues
 			System.out.println("-Swapper swap out of Job: " + jobNum);
 			System.out.println("--Added Job " + jobNum + " to swap queue");
 			JobTable.setDirection(jobNum, 1);
@@ -66,24 +68,24 @@ public class Swapper {
 			removeFromQueues(jobNum);
 			//in queues
 			if(JobTable.getDirection(jobNum) == 0){//drum to mem
-				
+				/*
 				if(JobTable.isBlocked(jobNum)){ //is blocked
 					blockedDrumToMem.add(jobNum);
 				}
-				else { //unblocked
+				else { //unblocked */
 					drumToMem.add(jobNum);
 					
-				}
+				//}
 			}
 			else{ //mem to drum
-				if(JobTable.isBlocked(jobNum)){ //is blocked
+				/*if(JobTable.isBlocked(jobNum)){ //is blocked
 					blockedMemToDrum.add(jobNum);
 					blockedDrumToMem.remove((Integer)jobNum);
 				}
-				else { //unblocked
+				else { //unblocked*/
 					memToDrum.add(jobNum);
 					
-				}
+				//}
 			}
 			
 			
@@ -93,8 +95,8 @@ public class Swapper {
 	private void removeFromQueues(int jobNum) {
 		System.out.println("inside swapper, removeFromQueues");
 		// remove object not index position, so cast as obj
-		blockedMemToDrum.remove((Integer)jobNum); 
-		blockedDrumToMem.remove((Integer)jobNum);
+		//blockedMemToDrum.remove((Integer)jobNum); 
+		//blockedDrumToMem.remove((Integer)jobNum);
 		memToDrum.remove((Integer)jobNum);
 		drumToMem.remove((Integer)jobNum);
 	}
@@ -103,10 +105,10 @@ public class Swapper {
 	public int swap(){
 		System.out.println("inside swapper, swap");
 		System.out.println("-Swap Queues:");
-		System.out.println("--blockedDrumToMem has " + blockedDrumToMem.size());
-		System.out.println("--blockedMemToDrum has " + blockedMemToDrum.size());
+		//System.out.println("--blockedDrumToMem has " + blockedDrumToMem.size());
+		//System.out.println("--blockedMemToDrum has " + blockedMemToDrum.size());
 		System.out.println("--memToDrum has " + memToDrum.size());
-		System.out.println("--drumToMem Queue has " + drumToMem.size());
+		System.out.println("--drumToMem has " + drumToMem.size());
 		
 		if (jobInDrum == -1) { //choose next job in queue needs to swap
 			System.out.println("jobInDrum: " + jobInDrum);
@@ -117,12 +119,13 @@ public class Swapper {
 
 				jobInDrum = memToDrum.poll();
 			}
+			/*
 			else if (!blockedMemToDrum.isEmpty()) {
 				jobInDrum = blockedMemToDrum.poll();
 			}
 			else if (!blockedDrumToMem.isEmpty()) {
 				jobInDrum = blockedDrumToMem.poll();
-			}
+			}*/
 			if (jobInDrum != -1) { //if there is a job waiting in queue
 				//if it is doing io added back to queue
 				if (JobTable.isDoingIO(jobInDrum)) {

@@ -5,13 +5,13 @@ public class MemoryManager {
 	static final int MAX = 100;
 	List<Integer> memoryTable;
 	LinkedList<Integer> jobInCore; //jobs in memory
-	LinkedList<Integer> blocked; //blocked jobs
+	//LinkedList<Integer> blocked; //blocked jobs
 	LinkedList<Integer> unswapped; //not swapped jobs
 	LinkedList<Integer> terminated; //terminated jobs
 	static int [] spaceBegEnd = {-1, -1};
 	
 	public MemoryManager(){
-		blocked = new LinkedList<Integer>();
+		//blocked = new LinkedList<Integer>();
 		unswapped = new LinkedList<Integer>();
 		terminated = new LinkedList<Integer>();
 		
@@ -25,7 +25,7 @@ public class MemoryManager {
 	
 	public void printQueues(){
 		System.out.println("terminated num: "+ terminated.size());
-		System.out.println("blocked num: "+ blocked.size());
+		//System.out.println("blocked num: "+ blocked.size());
 		System.out.println("unswapped num: "+ unswapped.size());
 	}
 	
@@ -33,14 +33,14 @@ public class MemoryManager {
 		System.out.println("Inside Mem, addToQueues");
 		if (JobTable.getAddress(jobNum) == -1) {
 			
-			if (JobTable.isBlocked(jobNum)) {
+			/*if (JobTable.isBlocked(jobNum)) {
 				System.out.println("add job to blocked..");
 				blocked.add(jobNum);
-			}
-			else {
+			}*/
+			//else {
 				System.out.println("add job to unswapped..");
 				unswapped.add(jobNum);
-			}
+			//}
 		}
 	}
 	
@@ -61,6 +61,7 @@ public class MemoryManager {
 		}
 		
 		//then blocked job
+		/*
 		else if(!blocked.isEmpty()){
 			if( findSpace(blocked.poll()) ){
 				jobNum = blocked.poll();
@@ -71,7 +72,7 @@ public class MemoryManager {
 				System.out.println("Not Enough Space for job: "
 						+ blocked.poll());
 			
-		}
+		}*/
 		return jobNum;
 	}
 	

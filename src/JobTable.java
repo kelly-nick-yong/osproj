@@ -70,12 +70,6 @@ public class JobTable {
 		int jobInd = jobNum -1;
 		jobTable.get(jobInd).timeInCPU = jobTable.get(jobInd).timeInCPU + timeSpend;
 	}
-	/*
-	public static void setCurrentTime(int jobNum){
-		int jobInd = jobNum -1;
-		jobTable.get(jobInd).currentTime = os.currentTime;
-	}
-	*/
 
 	public static int getDirection(int jobNum) {
 		int jobInd = jobNum -1;
