@@ -1,19 +1,17 @@
 import java.util.LinkedList;
 
 public class IOmanager {
-	LinkedList<Integer> unblocked;	 // IO for unblocked jobs	
-	LinkedList<Integer> blockedInCore; // IO for blocked, in memory jobs
-	LinkedList<Integer> blockedInDrum;// IO for blocked, in drum jobs
-	LinkedList<Integer> terminated;// IO for terminated jobs
-	//LinkedList<Integer> requestedSwap; //job requested to swap
-	int jobInIO;		//current job in IO
+	LinkedList<Integer> unblocked;	 // unblocked jobs	
+	LinkedList<Integer> blockedInCore; // blocked, in memory jobs
+	LinkedList<Integer> blockedInDrum;// blocked, in drum jobs
+	LinkedList<Integer> terminated;// terminated jobs
+	int jobInIO;		//current job doing IO
 	
 	IOmanager(){
 		unblocked = new LinkedList<Integer>();
 		blockedInCore = new LinkedList<Integer>();
 		blockedInDrum = new LinkedList<Integer>();
 		terminated = new LinkedList<Integer>();
-		//requestedSwap =  new LinkedList<Integer>();
 		jobInIO = -1;
 	}
 	
@@ -45,13 +43,6 @@ public class IOmanager {
 					> 1000){
 				jobToSwap = blockedInCore.getFirst(); //swap out
 			}
-			/*
-			if (requestedSwap.contains(jobToSwap)) { // job have requested to swap out
-				jobToSwap = -1;
-			}
-			else { // job have not requested to swap out
-				requestedSwap.add(jobToSwap);
-			}*/
 		}
 		
 		return jobToSwap;
@@ -64,13 +55,6 @@ public class IOmanager {
 		//core has no blocked job to swap
 		if(blockedInCore.isEmpty() && !blockedInDrum.isEmpty()){
 			jobToSwap = blockedInDrum.getFirst();
-			/*
-			if (requestedSwap.contains(jobToSwap)) { // job have requested to swap out
-				jobToSwap = -1;
-			}
-			else { // job have not requested to swap out
-				requestedSwap.add(jobToSwap);
-			}*/
 		}
 		return jobToSwap;
 	}
@@ -136,10 +120,6 @@ public class IOmanager {
 			System.out.println("Job that has IO pending: " + pendingIOs);
 			
 			if(pendingIOs > 0){ //there is io request
-				/*
-				if(requestedSwap.contains(jobNum)){
-					requestedSwap.remove((Integer)jobNum);
-				}*/
 				
 				//move into terminated
 				if(JobTable.isTerminated(jobNum)){
