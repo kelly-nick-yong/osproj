@@ -27,6 +27,7 @@ public class MemoryManager {
 		System.out.println("terminated num: "+ terminated.size());
 		//System.out.println("blocked num: "+ blocked.size());
 		System.out.println("unswapped num: "+ unswapped.size());
+		System.out.println("jobInCore num: "+ jobInCore.size());
 	}
 	
 	public void addToQueues (int jobNum) {
@@ -50,14 +51,14 @@ public class MemoryManager {
 		printQueues();
 		//unswapped job first
 		if(!unswapped.isEmpty()){
-			if( findSpace(unswapped.poll()) ){
-				jobNum = unswapped.poll();
+			if( findSpace(unswapped.getFirst()) ){
+				jobNum = highestPriority();
 				System.out.println("add job from unswapped: " 
-						+ unswapped.poll());
+						+ jobNum);
 			}
 			else
 				System.out.println("Not Enough Space for job: "
-						+ unswapped.poll());
+						+ jobNum);
 		}
 		
 		//then blocked job
@@ -246,6 +247,52 @@ public class MemoryManager {
 		}
 	}
 	
+	
+	//shortest time left next
+	public int shortestTimeLeft(){
+		System.out.println("Inside MemoryManager, shortestTimeLeft");
+		if(unswapped.isEmpty()){
+			System.out.println("unswapped queue is empty");
+			return -1;
+		}
+		int shortest = JobTable.getTimeLeft(unswapped.getFirst());
+		int jobNum = unswapped.getFirst();
+		
+		for(int elem : unswapped){
+			
+			if(JobTable.getTimeLeft(elem) < shortest){
+				jobNum = elem;
+				shortest = JobTable.getTimeLeft(elem);
+			}
+			System.out.println("jobNum: " + jobNum 
+					+ " shortestSofar: " + shortest);	
+		}
+		unswapped.remove((Integer)jobNum);
+		return jobNum;
+		
+	}
+	//next job with highest priority
+	public int highestPriority(){
+		System.out.println("Inside MemoryManager, highestPriority");
+		if(unswapped.isEmpty()){
+			System.out.println("unswapped queue is empty");
+			return -1;
+		}
+		int highest = JobTable.getPriority(unswapped.getFirst());
+		int jobNum = unswapped.getFirst();
+		
+		for(int elem : unswapped){
+			
+			if(JobTable.getPriority(elem) > highest){
+				jobNum = elem;
+				highest = JobTable.getPriority(elem);
+			}
+			System.out.println("jobNum: " + jobNum 
+					+ " priority highestSofar: " + highest);	
+		}
+		unswapped.remove((Integer)jobNum);
+		return jobNum;
+	}
 	
 	
 }

@@ -135,8 +135,12 @@ public class IOmanager {
 					}
 				}
 			}
+			if(JobTable.isSwappedOut(jobNum)){
+				System.out.println("jobNum: " + jobNum + " is swappedOut");
+				waitingIOQueue.remove((Integer)jobNum);
+			}
 			
-		}//-1
+		}//not -1
 	}// IOplacement
 	
 	public boolean isProcessingIO(int jobNum){

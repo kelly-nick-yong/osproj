@@ -11,6 +11,7 @@ public class Job {
 	int direction; // 0: Drum-to-Memory, 1: Memory-to-Drum, -1: No Swap
 	boolean inMemory;
 	boolean blocked;
+	boolean swappedOut; //swapped out of memory
 	boolean swapping; //is swapping
 	boolean terminated;
 	boolean doingIO;

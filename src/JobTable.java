@@ -123,6 +123,16 @@ public class JobTable {
 		jobTable.get(jobInd).swapping = swapping;
 	}
 	
+	public static boolean isSwappedOut(int jobNum) {
+		int jobInd = jobNum -1;
+		return jobTable.get(jobInd).swappedOut;
+	}
+
+	public static void setSwappedOut(int jobNum, boolean swappedOut) {
+		int jobInd = jobNum -1;
+		jobTable.get(jobInd).swappedOut = swappedOut;
+	}
+	
 	public static boolean isDoingIO(int jobNum){
 		int jobInd = jobNum -1;
 		return jobTable.get(jobInd).doingIO;

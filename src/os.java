@@ -148,7 +148,7 @@ public class os {
 	}
 	
 	public static void check(int [] a, int [] p){
-		//exceedTime[0] = exceeded maxCPUtime, free the memory by terminating
+		//exceedTime[0] = exceeded maxCPUtime/quantum, free the memory by terminating
 		//exceedTime[1] = exceeded maximum time in memory (1000)
 		System.out.println("CHECK..");
 		int [] cpuMemExceed = cpu.scheduler(a, p);

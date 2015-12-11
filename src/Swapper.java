@@ -25,6 +25,7 @@ public class Swapper {
 			System.out.println("Swapper swap in of Job: " + jobNum);
 			System.out.println("Job that's in drum: " + jobInDrum);
 			JobTable.setDirection(jobNum, 0);
+			JobTable.setInMemory(jobNum, true);
 			addToQueues(jobNum);
 		}
 	}
@@ -34,8 +35,10 @@ public class Swapper {
 		if(jobNum != -1) {
 			//set the dir and add it to queues
 			System.out.println("-Swapper swap out of Job: " + jobNum);
-			System.out.println("--Added Job " + jobNum + " to swap queue");
+			System.out.println("--Added Job " + jobNum + " to memToDrum queue");
 			JobTable.setDirection(jobNum, 1);
+			JobTable.setInMemory(jobNum, false);
+			JobTable.setSwappedOut(jobNum, true);
 			addToQueues(jobNum);
 		}
 	}
@@ -53,9 +56,9 @@ public class Swapper {
 		if(JobTable.getDirection(jobNum) == 0 ){ //get into mem
 			JobTable.setInMemory(jobNum, true);
 		}
-		else{  //get out of mem
+		else if(JobTable.getDirection(jobNum) == 1 ){  //get out of mem
 			JobTable.setInMemory(jobNum, false);
-			//JobTable.setSwapped(jobNum, true);
+			JobTable.setSwappedOut(jobNum, true);
 		}
 		
 		return jobNum;
@@ -77,7 +80,7 @@ public class Swapper {
 					
 				//}
 			}
-			else{ //mem to drum
+			else if(JobTable.getDirection(jobNum) == 1) { //mem to drum
 				/*if(JobTable.isBlocked(jobNum)){ //is blocked
 					blockedMemToDrum.add(jobNum);
 					blockedDrumToMem.remove((Integer)jobNum);
@@ -94,6 +97,7 @@ public class Swapper {
 	}
 	private void removeFromQueues(int jobNum) {
 		System.out.println("inside swapper, removeFromQueues");
+		System.out.println("jobNum to remove from queue: " + jobNum);
 		// remove object not index position, so cast as obj
 		//blockedMemToDrum.remove((Integer)jobNum); 
 		//blockedDrumToMem.remove((Integer)jobNum);
@@ -148,6 +152,7 @@ public class Swapper {
 		}
 		return jobInDrum;
 	}//swap
+	
 	
 	
 }

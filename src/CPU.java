@@ -29,7 +29,7 @@ public class CPU {
 	 * @param p
 	 */
 	public int [] scheduler(int [] a, int [] p){
-		//exceedTime[0] = exceeded maxCPUtime, free the memory by terminating
+		//exceedTime[0] = exceeded maxCPUtime/quantumtime, free the memory by terminating
 		//exceedTime[1] = exceeded maximum time in memory (1000)
 		System.out.println("inside CPU, scheduler");
 		int [] cpuMemExceed = {-1,-1};
