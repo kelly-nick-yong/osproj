@@ -2,15 +2,11 @@ import java.util.LinkedList;
 
 public class IOmanager {
 	LinkedList<Integer> waitingIOQueue;	 // waiting jobs	
-	//LinkedList<Integer> blockedInCore; // blocked, in memory jobs
-	//LinkedList<Integer> blockedInDrum;// blocked, in drum jobs
 	LinkedList<Integer> terminated;// terminated jobs
 	int jobInIO;		//current job doing IO
 	
 	IOmanager(){
 		waitingIOQueue = new LinkedList<Integer>();
-		//blockedInCore = new LinkedList<Integer>();
-		//blockedInDrum = new LinkedList<Integer>();
 		terminated = new LinkedList<Integer>();
 		jobInIO = -1;
 	}
@@ -26,40 +22,6 @@ public class IOmanager {
 		processIO();
 		
 	}
-	/*
-	//check blocked InCore jobs to swap out
-	public int swapOutReady(){
-		System.out.println("Inside IO, swapOutReady");
-		int jobToSwap = -1;
-		System.out.println("blockedInCore: " + blockedInCore.size());
-		//if there is blocked job in core
-		if(!blockedInCore.isEmpty()){
-			// check if last element is swapping
-			if(blockedInCore.getLast() != jobInIO){ // not already swapping
-				jobToSwap = blockedInCore.getLast(); //swap out
-			}
-			//if blocked job exceeded mem time
-			else if(JobTable.getEnterTime(blockedInCore.getFirst())
-					> 1000){
-				jobToSwap = blockedInCore.getFirst(); //swap out
-			}
-		}
-		
-		return jobToSwap;
-	}
-	
-	//blocked job to swap into mem
-	public int swapInReady(){
-		System.out.println("Inside IO, swapInReady");
-		int jobToSwap = -1;
-		//core has no blocked job to swap
-		System.out.println("blockedInDrum: " + blockedInDrum.size());
-		if(blockedInCore.isEmpty() && !blockedInDrum.isEmpty()){
-			jobToSwap = blockedInDrum.getFirst();
-		}
-		return jobToSwap;
-	}
-	*/
 	
 	//any job io for job in queues
 	public void processIO(){
@@ -73,10 +35,7 @@ public class IOmanager {
 				System.out.println("assign from terminated..");
 				jobInIO = terminated.poll();
 			}
-			/*else if(!blockedInCore.isEmpty()){
-				System.out.println("assign from blockedInCore..");
-				jobInIO = blockedInCore.poll();
-			}*/
+			
 			//lastly waiting jobs, may be not enough memory to run before
 			else if(!waitingIOQueue.isEmpty()){
 				System.out.println("assign from waitingQueue..");

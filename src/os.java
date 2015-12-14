@@ -5,6 +5,12 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
+/**
+ * 
+ * os simulation system
+ * @author YongLiu
+ *
+ */
 public class os {
 	public static int currentTime; // current time use for bookkeep and other
 	public static int timeBefore; // last updated time 
@@ -155,14 +161,7 @@ public class os {
 		int jobNum = -1;
 		//terminate job exceeded max cpu time
 		mm.addTerminated(cpuMemExceed[0]);
-		//check blocked job wants to swap out from mem
-		/*
-		swapper.swapOut(IO.swapOutReady());
-		//if blocked job wants to swap into mem
-		jobNum = IO.swapInReady();
-		jobNum = mm.addJob(jobNum); //able to add, return added index
-		swapper.swapIn(jobNum);
-		*/
+		
 		//swap out job exceeded max mem time
 		swapper.swapOut(cpuMemExceed[1]);
 		//next job in queues to swap in

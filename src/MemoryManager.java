@@ -5,7 +5,6 @@ public class MemoryManager {
 	static final int MAX = 100;
 	List<Integer> memoryTable;
 	LinkedList<Integer> jobInCore; //jobs in memory
-	//LinkedList<Integer> blocked; //blocked jobs
 	LinkedList<Integer> unswapped; //not swapped jobs
 	LinkedList<Integer> terminated; //terminated jobs
 	static int [] spaceBegEnd = {-1, -1};
@@ -25,7 +24,6 @@ public class MemoryManager {
 	
 	public void printQueues(){
 		System.out.println("terminated num: "+ terminated.size());
-		//System.out.println("blocked num: "+ blocked.size());
 		System.out.println("unswapped num: "+ unswapped.size());
 		System.out.println("jobInCore num: "+ jobInCore.size());
 	}
@@ -34,14 +32,8 @@ public class MemoryManager {
 		System.out.println("Inside Mem, addToQueues");
 		if (JobTable.getAddress(jobNum) == -1) {
 			
-			/*if (JobTable.isBlocked(jobNum)) {
-				System.out.println("add job to blocked..");
-				blocked.add(jobNum);
-			}*/
-			//else {
-				System.out.println("add job to unswapped..");
-				unswapped.add(jobNum);
-			//}
+			System.out.println("add job to unswapped..");
+			unswapped.add(jobNum);
 		}
 	}
 	
@@ -60,20 +52,6 @@ public class MemoryManager {
 				System.out.println("Not Enough Space for job: "
 						+ jobNum);
 		}
-		
-		//then blocked job
-		/*
-		else if(!blocked.isEmpty()){
-			if( findSpace(blocked.poll()) ){
-				jobNum = blocked.poll();
-				System.out.println("add job from blocked: " 
-						+ blocked.poll());
-			}
-			else
-				System.out.println("Not Enough Space for job: "
-						+ blocked.poll());
-			
-		}*/
 		return jobNum;
 	}
 	
@@ -91,7 +69,6 @@ public class MemoryManager {
 		}
 		else{
 			fillAddress(jobNum, spaceBegEnd);
-			//addToCore(jobNum);
 			//assign back to -1 after filling the address
 			spaceBegEnd[0] = -1;
 			spaceBegEnd[1] = -1;
@@ -144,8 +121,6 @@ public class MemoryManager {
 					first0 = false;
 				}
 				tempLen++; //counting length of this freespace
-				//System.out.println("tempLen: " + tempLen 
-				//		+ " index: " + i);
 				if(tempLen == sizeNeeded){
 					tmpEnd = i;
 				}
