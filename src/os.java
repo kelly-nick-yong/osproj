@@ -8,7 +8,7 @@ import java.util.Queue;
 /**
  * 
  * os simulation system
- * @author YongLiu
+ * @author Jialei Mei
  *
  */
 public class os {
